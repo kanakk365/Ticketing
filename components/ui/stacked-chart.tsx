@@ -37,27 +37,27 @@ interface SalespersonStackedChartProps {
 const chartConfig = {
   open: {
     label: "Open",
-    color: "hsl(210 29% 24%)",
+    color: "var(--chart-1)",
   },
   closedWon: {
     label: "Closed Won",
-    color: "hsl(168 32% 38%)",
+    color: "var(--chart-4)",
   },
   closedLost: {
     label: "Closed Lost",
-    color: "hsl(4 36% 40%)",
+    color: "var(--chart-2)",
   },
   quoted: {
     label: "Quoted",
-    color: "hsl(213 22% 44%)",
+    color: "#7da0fa",
   },
   duplicate: {
     label: "Duplicate",
-    color: "hsl(30 44% 48%)",
+    color: "var(--chart-5)",
   },
   unqualified: {
     label: "Unqualified",
-    color: "hsl(20 20% 52%)",
+    color: "var(--chart-3)",
   },
 } satisfies ChartConfig
 

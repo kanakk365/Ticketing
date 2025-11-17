@@ -32,6 +32,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  type ChartConfig,
 } from "@/components/ui/chart"
 import { StatusBarChart } from "@/components/ui/barchart"
 import { SalespersonStackedChart } from "@/components/ui/stacked-chart"
@@ -64,6 +65,33 @@ type TicketDataset = {
   topClosers: { rank: number; name: string; closed: number }[]
 }
 
+const vibrantPalette = {
+  aqua: "#4bcbeb",
+  blush: "#fe9496",
+  violet: "#9e58ff",
+  orchid: "#a05aff",
+  teal: "#1bcfb4",
+  magenta: "#f72585",
+  cyan: "#4bc8f0",
+  royal: "#4d0a99",
+  periwinkle: "#7da0fa",
+  iris: "#7978e9",
+  peach: "#f3797e",
+  ice: "#98bdff",
+} as const
+
+const statusPalette: Record<string, string> = {
+  "Converted Leads": vibrantPalette.orchid,
+  Quoted: vibrantPalette.periwinkle,
+  "Closed Won": vibrantPalette.teal,
+  "Success Rate": vibrantPalette.iris,
+  Unqualified: vibrantPalette.violet,
+  UnQualified: vibrantPalette.violet,
+  "Closed Lost": vibrantPalette.blush,
+  Duplicate: vibrantPalette.magenta,
+  Open: vibrantPalette.ice,
+}
+
 const ticketPerformance: Record<RegionKey, TicketDataset> = {
   intrastate: {
     summary: [
@@ -71,49 +99,49 @@ const ticketPerformance: Record<RegionKey, TicketDataset> = {
         label: "Open",
         value: "13",
         caption: "Active conversations",
-        accent: "from-[#334155] to-[#1e293b]",
+        accent: "from-[#4bcbeb] via-[#7da0fa] to-[#98bdff]",
       },
       {
         label: "Closed Won",
         value: "70",
         caption: "Converted in last cycle",
-        accent: "from-[#47716f] to-[#2d4a49]",
+        accent: "from-[#1bcfb4] via-[#4bc8f0] to-[#7da0fa]",
       },
       {
         label: "Closed Lost",
         value: "23",
         caption: "Need follow-up feedback",
-        accent: "from-[#8b6356] to-[#5c4139]",
+        accent: "from-[#fe9496] via-[#f3797e] to-[#f72585]",
       },
       {
         label: "Quoted",
         value: "171",
         caption: "Awaiting customer response",
-        accent: "from-[#5a6c8f] to-[#3d4966]",
+        accent: "from-[#7da0fa] via-[#9e58ff] to-[#4d0a99]",
       },
       {
         label: "Duplicate",
         value: "21",
         caption: "Auto-triaged",
-        accent: "from-[#8b7355] to-[#5c4d38]",
+        accent: "from-[#f72585] via-[#fe9496] to-[#f3797e]",
       },
       {
         label: "UnQualified",
         value: "25",
         caption: "Moved back to nurture",
-        accent: "from-[#7d7c7a] to-[#565553]",
+        accent: "from-[#9e58ff] via-[#a05aff] to-[#4d0a99]",
       },
       {
         label: "Converted Leads",
         value: "241",
         caption: "Total this quarter",
-        accent: "from-[#3d5a80] to-[#2a3e5a]",
+        accent: "from-[#a05aff] via-[#7da0fa] to-[#4bcbeb]",
       },
       {
         label: "Success Rate",
         value: "40.94%",
         caption: "+2.8% vs last week",
-        accent: "from-[#4a5568] to-[#2d3748]",
+        accent: "from-[#7978e9] via-[#9e58ff] to-[#4d0a99]",
       },
     ],
     salespeople: [
@@ -153,49 +181,49 @@ const ticketPerformance: Record<RegionKey, TicketDataset> = {
         label: "Open",
         value: "19",
         caption: "Cross-state follow ups",
-        accent: "from-[#334155] to-[#1e293b]",
+        accent: "from-[#4bcbeb] via-[#7da0fa] to-[#98bdff]",
       },
       {
         label: "Closed Won",
         value: "52",
         caption: "Closed in last sprint",
-        accent: "from-[#47716f] to-[#2d4a49]",
+        accent: "from-[#1bcfb4] via-[#4bc8f0] to-[#7da0fa]",
       },
       {
         label: "Closed Lost",
         value: "18",
         caption: "Marked as churn",
-        accent: "from-[#8b6356] to-[#5c4139]",
+        accent: "from-[#fe9496] via-[#f3797e] to-[#f72585]",
       },
       {
         label: "Quoted",
         value: "149",
         caption: "High-value quotes",
-        accent: "from-[#5a6c8f] to-[#3d4966]",
+        accent: "from-[#7da0fa] via-[#9e58ff] to-[#4d0a99]",
       },
       {
         label: "Duplicate",
         value: "18",
         caption: "Consolidated records",
-        accent: "from-[#8b7355] to-[#5c4d38]",
+        accent: "from-[#f72585] via-[#fe9496] to-[#f3797e]",
       },
       {
         label: "UnQualified",
         value: "21",
         caption: "Awaiting nurture",
-        accent: "from-[#7d7c7a] to-[#565553]",
+        accent: "from-[#9e58ff] via-[#a05aff] to-[#4d0a99]",
       },
       {
         label: "Converted Leads",
         value: "198",
         caption: "Quarter-to-date",
-        accent: "from-[#3d5a80] to-[#2a3e5a]",
+        accent: "from-[#a05aff] via-[#7da0fa] to-[#4bcbeb]",
       },
       {
         label: "Success Rate",
         value: "36.10%",
         caption: "+1.1% vs last week",
-        accent: "from-[#4a5568] to-[#2d3748]",
+        accent: "from-[#7978e9] via-[#9e58ff] to-[#4d0a99]",
       },
     ],
     salespeople: [
@@ -231,11 +259,23 @@ const ticketPerformance: Record<RegionKey, TicketDataset> = {
   },
 }
 
+const velocityChartConfig = {
+  successRate: {
+    label: "Success rate",
+    color: "#f72585",
+  },
+  quota: {
+    label: "Quota",
+    color: "#4bcbeb",
+  },
+} satisfies ChartConfig
+
 export default function TicketPerformance() {
   const [activeRegion, setActiveRegion] = useState<RegionKey>("intrastate")
   const [selectedRep, setSelectedRep] = useState<string>("all")
 
   const dataset = ticketPerformance[activeRegion]
+  const activeRegionLabel = activeRegion === "intrastate" ? "Intrastate" : "Interstate"
 
   const tableRows = useMemo(() => {
     if (selectedRep === "all") {
@@ -255,18 +295,124 @@ export default function TicketPerformance() {
     const successRate = parseFloat(dataset.summary.find((s) => s.label === "Success Rate")?.value || "0")
 
     return [
-      { label: "Converted Leads", value: convertedLeads },
-      { label: "Quoted", value: quoted },
-      { label: "Closed Won", value: closedWon },
-      { label: "Success Rate", value: successRate },
-      { label: "Unqualified", value: unqualified },
-      { label: "Closed Lost", value: closedLost },
-      { label: "Duplicate", value: duplicate },
-      { label: "Open", value: open },
+      { label: "Converted Leads", value: convertedLeads, color: statusPalette["Converted Leads"] },
+      { label: "Quoted", value: quoted, color: statusPalette.Quoted },
+      { label: "Closed Won", value: closedWon, color: statusPalette["Closed Won"] },
+      { label: "Success Rate", value: successRate, color: statusPalette["Success Rate"] },
+      { label: "Unqualified", value: unqualified, color: statusPalette.Unqualified },
+      { label: "Closed Lost", value: closedLost, color: statusPalette["Closed Lost"] },
+      { label: "Duplicate", value: duplicate, color: statusPalette.Duplicate },
+      { label: "Open", value: open, color: statusPalette.Open },
     ]
   }, [dataset.salespeople, dataset.summary])
 
   const successDelta = dataset.summary.find((stat) => stat.label === "Success Rate")?.caption
+  const weeklyInsights = useMemo(() => {
+    if (!dataset.weeklySuccess.length) {
+      return {
+        latest: null as TicketDataset["weeklySuccess"][number] | null,
+        previous: null as TicketDataset["weeklySuccess"][number] | null,
+        best: null as TicketDataset["weeklySuccess"][number] | null,
+        average: 0,
+        quotaHits: 0,
+      }
+    }
+
+    const latest = dataset.weeklySuccess[dataset.weeklySuccess.length - 1] ?? null
+    const previous = dataset.weeklySuccess[dataset.weeklySuccess.length - 2] ?? null
+    const best = dataset.weeklySuccess.reduce((peak, entry) => {
+      if (!peak) return entry
+      return entry.successRate > peak.successRate ? entry : peak
+    }, dataset.weeklySuccess[0])
+    const totalSuccess = dataset.weeklySuccess.reduce((sum, entry) => sum + entry.successRate, 0)
+    const quotaHits = dataset.weeklySuccess.filter((entry) => entry.successRate >= entry.quota).length
+
+    return {
+      latest,
+      previous,
+      best,
+      average: totalSuccess / dataset.weeklySuccess.length,
+      quotaHits,
+    }
+  }, [dataset.weeklySuccess])
+
+  const successMomentum = weeklyInsights.latest && weeklyInsights.previous
+    ? weeklyInsights.latest.successRate - weeklyInsights.previous.successRate
+    : 0
+  const quotaGap = weeklyInsights.latest
+    ? weeklyInsights.latest.successRate - weeklyInsights.latest.quota
+    : 0
+  const quotaHitPercentage = dataset.weeklySuccess.length
+    ? (weeklyInsights.quotaHits / dataset.weeklySuccess.length) * 100
+    : 0
+
+  const pipelineSignals = useMemo(() => {
+    if (!dataset.salespeople.length) {
+      return [] as Array<{ label: string; value: string; detail: string; color: string }>
+    }
+
+    const sortedBySuccess = [...dataset.salespeople].sort((a, b) => b.successRate - a.successRate)
+    const topConverter = sortedBySuccess[0]
+
+    const totals = dataset.salespeople.reduce(
+      (acc, rep) => {
+        acc.open += rep.open
+        acc.quoted += rep.quoted
+        acc.duplicate += rep.duplicate
+        acc.closedWon += rep.closedWon
+        acc.closedLost += rep.closedLost
+        return acc
+      },
+      { open: 0, quoted: 0, duplicate: 0, closedWon: 0, closedLost: 0 },
+    )
+
+    const convertedLeads = parseInt(dataset.summary.find((stat) => stat.label === "Converted Leads")?.value || "0")
+    const conversionShare = totals.quoted ? (convertedLeads / totals.quoted) * 100 : 0
+    const duplicateRate = totals.quoted ? (totals.duplicate / totals.quoted) * 100 : 0
+    const winLossMix = totals.closedWon + totals.closedLost
+      ? (totals.closedWon / (totals.closedWon + totals.closedLost)) * 100
+      : 0
+
+    const heaviestPipeline = dataset.salespeople.reduce((prev, rep) => {
+      if (!prev) return rep
+      const prevLoad = prev.open + prev.quoted
+      const repLoad = rep.open + rep.quoted
+      return repLoad > prevLoad ? rep : prev
+    }, dataset.salespeople[0])
+
+    return [
+      {
+        label: "Top converter",
+        value: topConverter ? topConverter.name : "—",
+        detail: topConverter ? `${topConverter.successRate.toFixed(1)}% win rate` : "Awaiting activity",
+        color: vibrantPalette.magenta,
+      },
+      {
+        label: "Lead conversions",
+        value: convertedLeads.toLocaleString(),
+        detail: `${conversionShare.toFixed(1)}% of current quotes`,
+        color: vibrantPalette.orchid,
+      },
+      {
+        label: "Duplicate drag",
+        value: `${duplicateRate.toFixed(1)}%`,
+        detail: `${totals.duplicate.toLocaleString()} flagged records`,
+        color: vibrantPalette.blush,
+      },
+      {
+        label: "Win / loss mix",
+        value: `${winLossMix.toFixed(1)}%`,
+        detail: `${totals.closedWon.toLocaleString()} won vs ${totals.closedLost.toLocaleString()} lost`,
+        color: vibrantPalette.aqua,
+      },
+      {
+        label: "Heaviest pipeline",
+        value: heaviestPipeline ? heaviestPipeline.name : "—",
+        detail: heaviestPipeline ? `${heaviestPipeline.open} open · ${heaviestPipeline.quoted} quoted` : "No active load",
+        color: vibrantPalette.violet,
+      },
+    ]
+  }, [dataset.salespeople, dataset.summary])
 
   return (
     <section className="space-y-8">
@@ -274,7 +420,7 @@ export default function TicketPerformance() {
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Ticket Pipeline</p>
           <h1 className="text-2xl font-semibold text-foreground">Ticket performance dashboard</h1>
-          <p className="text-muted-foreground text-sm">Monitor pipeline health, conversion velocity, and team focus across sales lanes.</p>
+          <p className="text-muted-foreground text-sm">Track how tickets move through your sales process.</p>
         </div>
         <div className="flex w-full gap-2 md:w-auto">
           {( ["intrastate", "interstate"] as RegionKey[] ).map((region) => (
@@ -317,7 +463,7 @@ export default function TicketPerformance() {
         <Card className="h-full">
           <CardHeader>
             <CardTitle>Top closers</CardTitle>
-            <CardDescription>Measured by leads closed this week.</CardDescription>
+            <CardDescription>Most deals closed this week.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {dataset.topClosers.map((closer) => (
@@ -334,7 +480,7 @@ export default function TicketPerformance() {
                     <p className="text-sm text-muted-foreground">{closer.closed} closed leads</p>
                   </div>
                 </div>
-                <ArrowUpRight className="h-4 w-4 text-emerald-500" />
+                <ArrowUpRight className="h-4 w-4"  />
               </div>
             ))}
           </CardContent>
@@ -345,7 +491,7 @@ export default function TicketPerformance() {
         <CardHeader className="flex flex- justify-between items-center gap-4 border-b pb-6">
           <div>
             <CardTitle className="text-xl">Salesperson performance</CardTitle>
-            <CardDescription>Success rate is calculated from closed won vs total opportunities.</CardDescription>
+            <CardDescription>Success rate = deals won ÷ total deals.</CardDescription>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -404,7 +550,48 @@ export default function TicketPerformance() {
         </CardContent>
       </Card>
 
-      <SalespersonStackedChart data={dataset.salespeople} />
+      <div className="grid gap-6 xl:grid-cols-[3fr_2fr]">
+        <div className="h-full">
+          <SalespersonStackedChart data={dataset.salespeople} />
+        </div>
+        <div className="grid gap-6">
+
+          <Card className="h-full">
+            <CardHeader>
+              <CardTitle>Response time</CardTitle>
+              <CardDescription>Average time to first response.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {dataset.salespeople.map((person, index) => {
+                const colors = [vibrantPalette.magenta, vibrantPalette.orchid, vibrantPalette.blush, vibrantPalette.aqua, vibrantPalette.violet]
+                const color = colors[index % colors.length]
+                return (
+                  <div
+                    key={person.name}
+                    className="rounded-2xl border px-4 py-3"
+                    style={{
+                      borderColor: `${color}33`,
+                      backgroundColor: `${color}12`,
+                    }}
+                  >
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                      {person.name}
+                    </p>
+                    <div className="flex flex-wrap items-end justify-between gap-2">
+                      <span className="text-2xl font-semibold" style={{ color }}>
+                        {Math.floor(Math.random() * 3) + 1}h {Math.floor(Math.random() * 60)}m
+                      </span>
+                      <span className="text-sm text-muted-foreground">
+                        {person.open + person.quoted} active tickets
+                      </span>
+                    </div>
+                  </div>
+                )
+              })}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </section>
   )
 }

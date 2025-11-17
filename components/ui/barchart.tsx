@@ -1,7 +1,7 @@
 "use client";
 
 import { TrendingUp } from "lucide-react";
-import { Bar, BarChart, XAxis } from "recharts";
+import { Bar, BarChart, Cell, XAxis } from "recharts";
 import {
   Card,
   CardContent,
@@ -27,6 +27,7 @@ const chartConfig = {
 type StatusDatum = {
   label: string;
   value: number;
+  color?: string;
 };
 
 interface StatusBarChartProps {
@@ -50,7 +51,7 @@ export function StatusBarChart({
         <CardTitle className="flex flex-wrap items-center gap-2">
           {title}
           {deltaLabel ? (
-            <Badge variant="outline" className="border-none bg-primary/10 text-primary">
+            <Badge variant="outline" className="gap-1.5 border-none bg-primary/10 px-3 py-1 text-primary">
               <TrendingUp className="h-4 w-4" />
               <span>{deltaLabel}</span>
             </Badge>
@@ -69,7 +70,11 @@ export function StatusBarChart({
               shape={<CustomGradientBar dataKey="tickets" />}
               dataKey="value"
               fill="var(--color-tickets)"
-            />
+            >
+              {data.map((item) => (
+                <Cell key={item.label} fill={item.color || "var(--color-tickets)"} />
+              ))}
+            </Bar>
           </BarChart>
         </ChartContainer>
       </CardContent>
